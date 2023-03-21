@@ -4,6 +4,6 @@
 
 2023년 1학기 
 
--- Android Studio
--- FireBase
+- Android Studio
+- FireBase
 
