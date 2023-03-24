@@ -11,3 +11,5 @@
 Android Studio Electric Eel | 2022.1.1 Patch 2
 
 JDK 1.8
+
+API 23:Android 7.0
