@@ -16,7 +16,7 @@
         android:inputType="textEmailAddress"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,7 +30,7 @@
         android:hint="몸무게 (kg)"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_height" />
 
@@ -44,7 +44,7 @@
         android:inputType="textPassword"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.542"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_email" />
 
@@ -58,9 +58,9 @@
         android:textSize="25sp"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.542"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_name" />
+        app:layout_constraintTop_toBottomOf="@+id/et_nickname" />
 
     <EditText
         android:id="@+id/et_passwordCheck"
@@ -72,12 +72,12 @@
         android:inputType="textPassword"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.542"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_password" />
 
     <EditText
-        android:id="@+id/et_name"
+        android:id="@+id/et_nickname"
         android:layout_width="300dp"
         android:layout_height="65sp"
         android:layout_marginTop="15sp"
@@ -86,7 +86,7 @@
         android:inputType="textPersonName"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.552"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_passwordCheck" />
 
@@ -100,23 +100,24 @@
         android:background="#A1E5C3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.548"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <RadioGroup
         android:id="@+id/rg_gender"
-        android:layout_width="169dp"
-        android:layout_height="110dp"
+        android:layout_width="252dp"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/btn_register"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.547"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_weight"
         app:layout_constraintVertical_bias="0.449">
 
         <RadioButton
             android:id="@+id/rd_gender_f"
-            android:layout_width="match_parent"
+            android:layout_width="114dp"
             android:layout_height="49dp"
             android:checked="true"
             android:text="여성"
@@ -127,8 +128,8 @@
 
         <RadioButton
             android:id="@+id/rd_gender_m"
-            android:layout_width="163dp"
-            android:layout_height="48dp"
+            android:layout_width="138dp"
+            android:layout_height="53dp"
             android:text="남성"
             android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"

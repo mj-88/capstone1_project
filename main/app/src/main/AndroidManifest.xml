@@ -32,9 +32,12 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="false">
+            android:exported="false"/>
 
-        </activity>
+
+        <activity
+            android:name=".FindPwdActivity"
+            android:exported="false"/>
 
 
     </application>

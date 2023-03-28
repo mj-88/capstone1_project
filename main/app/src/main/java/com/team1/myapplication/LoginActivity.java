@@ -69,5 +69,17 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        Button btn_password = findViewById(R.id.btn_password);
+        btn_password.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, FindPwdActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 }

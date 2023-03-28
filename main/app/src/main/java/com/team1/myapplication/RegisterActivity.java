@@ -23,7 +23,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
-    private EditText mEtEmail, mEtPasswordCheck,mEtPassword;
+    private EditText mEtEmail, mEtPasswordCheck,mEtPassword,mEtWeight, mEtHeight,mEtNickName, mEtGender;
     private Button mBtnRegister;
 
     private RadioGroup radioGroup;
@@ -48,6 +48,10 @@ public class RegisterActivity extends AppCompatActivity {
                 String strEmail = mEtEmail.getText().toString(); //입력받은 이메일을 가져옴
                 String strPassWord = mEtPassword.getText().toString(); //입력받은 비밀번호를 가져옴
                 String pwdcheck = mEtPasswordCheck.getText().toString().trim(); //비밀번호를 맞게 입력했는지 확인
+
+//                String strWeight= mEtWeight.getText().toString();
+//                String strHeight = mEtHeight.getText().toString();
+//                String strNickName = mEtNickName.getText().toString();
 
                 //라디오 그룹 설정
                 radioGroup = (RadioGroup) findViewById(R.id.rg_gender);
