@@ -8,52 +8,89 @@
 
     <EditText
         android:id="@+id/et_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="244dp"
+        android:layout_width="279sp"
+        android:layout_height="73sp"
+        android:layout_marginTop="116dp"
         android:ems="10"
-        android:hint="이메일을 입력하시오"
+        android:hint="이메일"
         android:inputType="textEmailAddress"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/et_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_width="285sp"
+        android:layout_height="72sp"
+        android:layout_marginTop="48dp"
         android:ems="10"
-        android:hint="비밀번호를 입력하시오"
+        android:hint="비밀번호"
         android:inputType="textPassword"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_email" />
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="197dp"
-        android:layout_height="62dp"
-        android:layout_marginBottom="24dp"
-        android:text="Sign In"
-        app:layout_constraintBottom_toTopOf="@+id/btn_register"
+        android:layout_width="211dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="52dp"
+        android:background="#A1E5C3"
+        android:text="@string/login"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password" />
 
     <Button
         android:id="@+id/btn_register"
-        android:layout_width="194dp"
-        android:layout_height="49dp"
-        android:layout_marginBottom="92dp"
+        android:layout_width="213dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="48dp"
         android:background="#00ff0000"
-        android:text="회원가입"
+        android:text="@string/signup"
         android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+
+    <Button
+        android:id="@+id/btn_password"
+        android:layout_width="212dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="56dp"
+        android:background="#00ff0000"
+        android:text="@string/find_pwd"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_register"
+        app:layout_constraintVertical_bias="0.188" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="375dp"
+        android:layout_height="114dp"
+        android:layout_marginTop="252dp"
+        android:fontFamily="@font/font01"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="#008000"
+        android:textSize="80sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

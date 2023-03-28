@@ -1,5 +1,6 @@
 package com.team1.myapplication;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +25,8 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private EditText mEtEmail, mEtPasswordCheck,mEtPassword;
     private Button mBtnRegister;
+
+    private RadioGroup radioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +47,13 @@ public class RegisterActivity extends AppCompatActivity {
                 // 회원가입
                 String strEmail = mEtEmail.getText().toString(); //입력받은 이메일을 가져옴
                 String strPassWord = mEtPassword.getText().toString(); //입력받은 비밀번호를 가져옴
+                String pwdcheck = mEtPasswordCheck.getText().toString().trim(); //비밀번호를 맞게 입력했는지 확인
 
+                //라디오 그룹 설정
+                radioGroup = (RadioGroup) findViewById(R.id.rg_gender);
+                radioGroup.setOnCheckedChangeListener(radioGroupButtonChangeListener);
 
-                if(pwd.equals(pwdcheck)) {
+                if(strPassWord.equals(pwdcheck)) {
                     mFirebaseAuth.createUserWithEmailAndPassword(strEmail, strPassWord).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -67,7 +75,14 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
                 }
+
             }
+
+
+
+            RadioGroup.OnCheckedChangeListener radioGroupButtonChangeListener = new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) { } };
 
         });
 
