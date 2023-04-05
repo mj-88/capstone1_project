@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +22,7 @@ public class SecessionActivity extends AppCompatActivity {
 
 
     private FirebaseUser user;
+    private TextView email_View;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,12 @@ public class SecessionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_secession);
 
         user =FirebaseAuth.getInstance().getCurrentUser();
+
+        String email = user.getEmail();
+        email_View = (TextView)findViewById(R.id.textView5);
+
+        email_View.setText(email);
+
 
 
         Button button_secession = (Button)findViewById(R.id.button3);
