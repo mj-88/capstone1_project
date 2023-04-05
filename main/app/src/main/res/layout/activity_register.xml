@@ -83,7 +83,6 @@
         android:layout_marginTop="15sp"
         android:ems="10"
         android:hint="닉네임"
-        android:inputType="textPersonName"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -105,8 +104,8 @@
 
     <RadioGroup
         android:id="@+id/rg_gender"
-        android:layout_width="252dp"
-        android:layout_height="100dp"
+        android:layout_width="262dp"
+        android:layout_height="84dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/btn_register"
         app:layout_constraintEnd_toEndOf="parent"
@@ -126,6 +125,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_weight" />
 
+
         <RadioButton
             android:id="@+id/rd_gender_m"
             android:layout_width="138dp"
@@ -133,6 +133,7 @@
             android:text="남성"
             android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.413"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rd_gender_f" />
 

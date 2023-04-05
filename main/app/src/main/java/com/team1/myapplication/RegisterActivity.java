@@ -1,5 +1,6 @@
 package com.team1.myapplication;
 
+
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -23,10 +25,18 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
-    private EditText mEtEmail, mEtPasswordCheck,mEtPassword,mEtWeight, mEtHeight,mEtNickName, mEtGender;
+    private EditText mEtEmail;
+    private EditText mEtPasswordCheck;
+    private EditText mEtPassword;
+    private EditText mEtWeight;
+    private EditText mEtHeight;
+    private EditText mEtNickName;
+    private String mEtGender;
     private Button mBtnRegister;
 
     private RadioGroup radioGroup;
+    private DatabaseReference mDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,9 @@ public class RegisterActivity extends AppCompatActivity {
         mEtPassword = findViewById(R.id.et_password);
         mBtnRegister = findViewById(R.id.btn_register);
         mEtPasswordCheck = findViewById(R.id.et_passwordCheck);
+        mEtNickName = findViewById(R.id.et_nickname);
+        mEtHeight = findViewById(R.id.et_height);
+        mEtWeight = findViewById(R.id.et_weight);
 
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,29 +62,44 @@ public class RegisterActivity extends AppCompatActivity {
                 String strPassWord = mEtPassword.getText().toString(); //입력받은 비밀번호를 가져옴
                 String pwdcheck = mEtPasswordCheck.getText().toString().trim(); //비밀번호를 맞게 입력했는지 확인
 
-//                String strWeight= mEtWeight.getText().toString();
-//                String strHeight = mEtHeight.getText().toString();
-//                String strNickName = mEtNickName.getText().toString();
+                String strNickName = mEtNickName.getText().toString();
+                String strWeight= mEtWeight.getText().toString();
+                String strHeight = mEtHeight.getText().toString();
 
                 //라디오 그룹 설정
                 radioGroup = (RadioGroup) findViewById(R.id.rg_gender);
                 radioGroup.setOnCheckedChangeListener(radioGroupButtonChangeListener);
 
+                RadioButton rdoButton = findViewById( radioGroup.getCheckedRadioButtonId() );
+
+                mEtGender = rdoButton.getText().toString().toUpperCase();
+
+
                 if(strPassWord.equals(pwdcheck)) {
-                    mFirebaseAuth.createUserWithEmailAndPassword(strEmail, strPassWord).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                    Task<AuthResult> authResultTask = mFirebaseAuth.createUserWithEmailAndPassword(strEmail, strPassWord).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+
+
                                 FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+
+                                mDatabase = FirebaseDatabase.getInstance().getReference();
 
                                 UserAccount account = new UserAccount();
                                 account.setPassword(strPassWord);
                                 account.setEmailId(firebaseUser.getEmail());
                                 account.setIdToken(firebaseUser.getUid());
+                                account.setUser_nickname(strNickName);
+                                account.setWeight(strWeight);
+                                account.setHeight(strHeight);
+                                account.setGender(mEtGender);
 
-                                mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
+                                mDatabase.child("UserAccount").child(account.getIdToken()).setValue(account);
 
-                                Toast.makeText(RegisterActivity.this, "회원가입 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "회원가입 완료되었습니다.", Toast.LENGTH_LONG).show();
+                                finish();
+
                             } else {
                                 Toast.makeText(RegisterActivity.this, "회원가입에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                             }
@@ -83,7 +111,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
 
-
             RadioGroup.OnCheckedChangeListener radioGroupButtonChangeListener = new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) { } };
@@ -91,4 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+
+
 }
