@@ -27,6 +27,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         Button button_logout = (Button) findViewById(R.id.logout);
         Button button_secession = (Button) findViewById(R.id.secession);
+        Button button_detail =(Button) findViewById(R.id.profile_detail);
+        Button button_userservice =(Button) findViewById(R.id.button);
 
         button_secession.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +38,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+
+
+
         button_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view){
@@ -44,6 +49,24 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent2);
             }
         });
+
+        button_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view){
+                Intent intent3 = new Intent(getApplicationContext(), ProfileDetailActivity.class);
+                startActivity(intent3);
+            }
+        });
+
+        button_userservice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view){
+                Intent intent4 = new Intent(getApplicationContext(), UserServiceActivity.class);
+                startActivity(intent4);
+            }
+        });
+
+
 
     }
 }
