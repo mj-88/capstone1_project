@@ -12,7 +12,7 @@
         android:layout_width="310sp"
         android:layout_height="65dp"
         android:layout_marginStart="115dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="115dp"
         android:layout_marginBottom="20dp"
         android:hint="@string/foodName"
@@ -20,6 +20,7 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/photoButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton" />
 
@@ -28,16 +29,31 @@
         android:layout_width="310dp"
         android:layout_height="70dp"
         android:layout_marginStart="115dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="115dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/button_shape"
         android:text="@string/photoButton"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/galleryButton"/>
+
+    <Button
+        android:id="@+id/galleryButton"
+        android:layout_width="310dp"
+        android:layout_height="70dp"
+        android:background="@drawable/button_shape"
+        android:text="@string/gallery"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="890dp"
+        app:layout_constraintTop_toBottomOf="@+id/photoButton"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"/>
 
     <ImageView
         android:id="@+id/imageButton"
@@ -57,16 +73,16 @@
         android:layout_width="310dp"
         android:layout_height="70dp"
         android:layout_marginStart="115dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="115dp"
+        app:layout_constraintTop_toBottomOf="@+id/galleryButton"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="139dp"
         android:background="@drawable/button_shape"
         android:text="@string/saveButton"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/photoButton" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
