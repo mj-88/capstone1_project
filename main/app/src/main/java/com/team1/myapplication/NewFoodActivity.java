@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.loader.content.CursorLoader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,6 +14,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -31,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.Manifest;
+import android.widget.Toast;
 
 import com.bumptech.glide.Priority;
 import com.google.android.gms.common.api.ApiException;
@@ -41,6 +45,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.recaptcha.Recaptcha;
 import com.google.android.recaptcha.RecaptchaTasksClient;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -79,7 +86,10 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     Uri imageUri = null;
 
     FirebaseStorage storage = FirebaseStorage.getInstance(); // 파이어베이스 저장소 객체
+
+    StorageReference storageRef = storage.getReference();
     StorageReference reference = null; // 저장소 레퍼런스 객체 : storage 를 사용해 저장 위치를 설정
+
 
 
 
@@ -103,6 +113,13 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
         boolean hasWritePerm = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         if (!hasCamPerm || !hasWritePerm)  // 권한 없을 시  권한설정 요청
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+
+        FirebaseApp.initializeApp(/*context=*/ this);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                DebugAppCheckProviderFactory.getInstance());
+
     }
 
 
@@ -110,10 +127,6 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     @SuppressLint({"NonConstantResourceId", "QueryPermissionsNeeded"})
     @Override
     public void onClick(View view) {
-
-
-
-
         switch (view.getId()) {
             case R.id.photoButton: // 카메라 선택 시
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -127,6 +140,10 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                         Uri imageUri = FileProvider.getUriForFile(getApplicationContext(),
                                 "com.team1.myapplication.fileprovider",
                                 imageFile);
+
+
+
+                        Log.v("fuck","제발바바바라ㅏㅏ라라 : "+imageUri);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 
 
@@ -141,9 +158,7 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                 intent = new Intent(Intent.ACTION_PICK);
                 intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 intent.setType("image/*");
-
-//                launcher.launch(intent);
-                startActivity(intent);
+                startActivityForResult(intent, GALLERY);
 
                 break;
             case R.id.saveButton: // 업로드 선택 시
@@ -218,7 +233,9 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
 //            업로드 성공 시 동작
 //                hideProgressDialog();
                 Log.d(TAG, "onSuccess: upload");
-                downloadUri(); // 업로드 성공 시 업로드한 파일 Uri 다운받기
+//                downloadUri(); // 업로드 성공 시 업로드한 파일 Uri 다운받기
+                Toast.makeText(NewFoodActivity.this," 식단 저장 완료 !! ",Toast.LENGTH_LONG).show();
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -278,7 +295,16 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public String getPath(Uri uri){
+        String [] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader cursorLoader = new CursorLoader(this, uri,proj,null,null,null);
+        Cursor cursor = cursorLoader.loadInBackground();
+        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+        cursor.moveToFirst();
+        return cursor.getString(index);
+    }
+
 
 }
-
 
