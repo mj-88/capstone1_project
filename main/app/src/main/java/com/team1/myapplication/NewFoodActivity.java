@@ -2,7 +2,6 @@ package com.team1.myapplication;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
@@ -24,7 +23,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -37,16 +35,21 @@ import java.util.Date;
 import android.Manifest;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import org.json.JSONArray;
 
 public class NewFoodActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -54,7 +57,8 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     ImageView imageView;
     int imgFrom;
     Button btnCamera, btnGallery,btnUpload;
-    EditText foodName;
+    EditText mealName;
+    String stremailId;
 
     final int CAMERA = 100; // 카메라 선택시 인텐트 값
     final int GALLERY = 101; // 갤러리 선택 시 인텐트 값
@@ -73,18 +77,25 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     StorageReference reference = null; // 저장소 레퍼런스 객체 : storage 를 사용해 저장 위치를 설정
 
 
+    private DatabaseReference mDatabase;
 
+
+     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference ref = database.getReference();
+
+String ImageRealName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_food);
 
+
         imageView = findViewById(R.id.imageButton);
         btnCamera = findViewById(R.id.photoButton);
         btnGallery = findViewById(R.id.galleryButton);
         btnUpload = findViewById(R.id.saveButton);
-        foodName = (EditText) findViewById(R.id.editTextFood);
+        mealName = (EditText) findViewById(R.id.editTextFood);
 
         btnCamera.setOnClickListener(this);
         btnGallery.setOnClickListener(this);
@@ -107,6 +118,10 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     @SuppressLint({"NonConstantResourceId", "QueryPermissionsNeeded"})
     @Override
     public void onClick(View view) {
+
+        String strMealName = mealName.getText().toString();
+
+
         switch (view.getId()) {
             case R.id.photoButton:
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -117,7 +132,7 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                         e.printStackTrace();
                     }
                     if (imageFile != null) {
-                        Uri imageUri = FileProvider.getUriForFile(getApplicationContext(),
+                        imageUri = FileProvider.getUriForFile(getApplicationContext(),
                                 "com.team1.myapplication.fileprovider",
                                 imageFile);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -136,7 +151,32 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.saveButton:
                 if (imagePath.length() > 0 && imgFrom >= 100) {
-                    uploadImg();
+
+                    //food DB에 데이터 저장
+                    if(ImageRealName != null  ) {
+
+                        uploadImg();
+
+                        Date nowDate = new Date();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+                        String strSaveDate = simpleDateFormat.format(nowDate);
+
+
+                        FirebaseUser get_Auth_value = FirebaseAuth.getInstance().getCurrentUser();
+                        String stremailId = get_Auth_value.getEmail();
+
+                        mDatabase = ref.child("food");
+
+
+                        MealUpload mealUpload = new MealUpload(strSaveDate , stremailId, ImageRealName, strMealName);
+                        mDatabase.push().setValue(mealUpload);
+                        Toast.makeText(NewFoodActivity.this, "loading...", Toast.LENGTH_LONG).show();
+                        finish();
+
+                    }else {
+                                    Toast.makeText(NewFoodActivity.this, "식단명을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
                 break;
         }
@@ -186,12 +226,15 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                 String imageFileName = "IMAGE_" + timeStamp + "_.png"; // 파일명
                 reference = storage.getReference().child("image").child(imageFileName); // 이미지 파일 경로 지정 (/item/imageFileName)
                 uploadTask = reference.putFile(imageUri); // 업로드할 파일과 업로드할 위치 설정
+                ImageRealName = imageFileName;
                 break;
             case CAMERA:
                 /*카메라 선택 시 생성했던 이미지파일명으로 reference 에 경로 세팅,
                  * uploadTask 에서 생성한 이미지파일을 업로드하기로 설정*/
                 reference = storage.getReference().child("image").child(imageFile.getName()); // imageFile.toString()을 할 경우 해당 파일의 경로 자체가 불러와짐
                 uploadTask = reference.putFile(Uri.fromFile(imageFile)); // 업로드할 파일과 업로드할 위치 설정
+
+                ImageRealName = imageFile.getName();
                 break;
         }
 
@@ -202,9 +245,8 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
 //            업로드 성공 시 동작
 //                hideProgressDialog();
 
-
                 Log.d(TAG, "onSuccess: upload");
-//                downloadUri(); // 업로드 성공 시 업로드한 파일 Uri 다운받기
+                downloadUri(); // 업로드 성공 시 업로드한 파일 Uri 다운받기
                 Toast.makeText(NewFoodActivity.this," 식단 저장 완료 !! ",Toast.LENGTH_LONG).show();
 
             }
@@ -219,27 +261,14 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     void downloadUri() {
-//        지정한 경로(reference)에 대한 uri 을 다운로드하는 method
-//        showProgressDialog("다운로드 중");
         reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-//                uri 다운로드 성공 시 동작
-//                다운받은 uri를 인텐트에 넣어 다른 액티비티로 이동
-//                hideProgressDialog();
-                Log.d(TAG, "onSuccess: download");
-
-//                intent = new Intent(NewFoodActivity.this, SetImageActivity.class);
-                intent.putExtra("path", uri.toString()); // 다운로드한 uri, String 형으로 바꿔 인텐트에 넣기
-                startActivity(intent);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-//                uri 다운로드 실패 시 동작
-//                hideProgressDialog();
-                Log.d(TAG, "onFailure: download");
             }
         });
     }
