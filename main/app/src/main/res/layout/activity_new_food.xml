@@ -8,7 +8,7 @@
 
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/editTextFood"
         android:layout_width="310sp"
         android:layout_height="65dp"
         android:layout_marginStart="115dp"
@@ -37,7 +37,7 @@
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintTop_toBottomOf="@+id/editTextFood"
         app:layout_constraintBottom_toTopOf="@+id/galleryButton"/>
 
     <Button
@@ -63,7 +63,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="55dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintBottom_toTopOf="@+id/editTextFood"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

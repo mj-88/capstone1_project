@@ -3,7 +3,6 @@ package com.team1.myapplication;
 public class Upload {
     private String mName;
     private String mImageUrl;
-
     public Upload(){
 
     }
