@@ -2,7 +2,6 @@ package com.team1.myapplication;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
@@ -24,7 +23,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -36,44 +35,33 @@ import java.util.Date;
 import android.Manifest;
 import android.widget.Toast;
 
-import com.bumptech.glide.Priority;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.safetynet.SafetyNet;
-import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.recaptcha.Recaptcha;
-import com.google.android.recaptcha.RecaptchaTasksClient;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.json.JSONArray;
-
 public class NewFoodActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-
-
-//    implementation 'com.google.cloud:google-cloud-recaptchaenterprise:3.12.0'
-//    implementation 'com.google.android.recaptcha:recaptcha:18.1.1'
-//
-//    implementation 'com.google.android.material:material:1.2.1'
-//
-//    implementation 'androidx.activity:activity:1.3.0-alpha08'
-//    implementation 'androidx.fragment:fragment:1.4.0-alpha01'
-
     ImageView imageView;
     int imgFrom;
+    Button btnCamera, btnGallery,btnUpload;
+    EditText mealName;
+    String stremailId;
 
-    Button btnCamera, btnGallery, btnMove, btnUpload;
-
-    final int CAMERA = 100; // 카메라 선택시 인텐트로 보내는 값
-    final int GALLERY = 101; // 갤러리 선택 시 인텐트로 보내는 값
+    final int CAMERA = 100; // 카메라 선택시 인텐트 값
+    final int GALLERY = 101; // 갤러리 선택 시 인텐트 값
     Intent intent;
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat imageDate = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -86,12 +74,16 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     Uri imageUri = null;
 
     FirebaseStorage storage = FirebaseStorage.getInstance(); // 파이어베이스 저장소 객체
-
-    StorageReference storageRef = storage.getReference();
     StorageReference reference = null; // 저장소 레퍼런스 객체 : storage 를 사용해 저장 위치를 설정
 
 
+    private DatabaseReference mDatabase;
 
+
+     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference ref = database.getReference();
+
+String ImageRealName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +95,7 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
         btnCamera = findViewById(R.id.photoButton);
         btnGallery = findViewById(R.id.galleryButton);
         btnUpload = findViewById(R.id.saveButton);
+        mealName = (EditText) findViewById(R.id.editTextFood);
 
         btnCamera.setOnClickListener(this);
         btnGallery.setOnClickListener(this);
@@ -114,12 +107,10 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
         if (!hasCamPerm || !hasWritePerm)  // 권한 없을 시  권한설정 요청
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
-
         FirebaseApp.initializeApp(/*context=*/ this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
                 DebugAppCheckProviderFactory.getInstance());
-
     }
 
 
@@ -127,8 +118,12 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     @SuppressLint({"NonConstantResourceId", "QueryPermissionsNeeded"})
     @Override
     public void onClick(View view) {
+
+        String strMealName = mealName.getText().toString();
+
+
         switch (view.getId()) {
-            case R.id.photoButton: // 카메라 선택 시
+            case R.id.photoButton:
                 intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     try {
@@ -137,18 +132,11 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                         e.printStackTrace();
                     }
                     if (imageFile != null) {
-                        Uri imageUri = FileProvider.getUriForFile(getApplicationContext(),
+                        imageUri = FileProvider.getUriForFile(getApplicationContext(),
                                 "com.team1.myapplication.fileprovider",
                                 imageFile);
-
-
-
-                        Log.v("fuck","제발바바바라ㅏㅏ라라 : "+imageUri);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-
-
 //                        launcher.launch(intent);
-
                         startActivityForResult(intent, CAMERA);
 
                     }
@@ -161,9 +149,34 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                 startActivityForResult(intent, GALLERY);
 
                 break;
-            case R.id.saveButton: // 업로드 선택 시
+            case R.id.saveButton:
                 if (imagePath.length() > 0 && imgFrom >= 100) {
-                    uploadImg(); // 업로드 작업 실행
+
+                    //food DB에 데이터 저장
+                    if(ImageRealName != null  ) {
+
+                        uploadImg();
+
+                        Date nowDate = new Date();
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+                        String strSaveDate = simpleDateFormat.format(nowDate);
+
+
+                        FirebaseUser get_Auth_value = FirebaseAuth.getInstance().getCurrentUser();
+                        String stremailId = get_Auth_value.getEmail();
+
+                        mDatabase = ref.child("food");
+
+
+                        MealUpload mealUpload = new MealUpload(strSaveDate , stremailId, ImageRealName, strMealName);
+                        mDatabase.push().setValue(mealUpload);
+                        Toast.makeText(NewFoodActivity.this, "loading...", Toast.LENGTH_LONG).show();
+                        finish();
+
+                    }else {
+                                    Toast.makeText(NewFoodActivity.this, "식단명을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
                 break;
         }
@@ -180,9 +193,6 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                 imageUri = data.getData(); // 이미지 Uri 정보
                 imagePath = data.getDataString(); // 이미지 위치 경로 정보
             }
-          /*  카메라를 선택할 경우, createImageFile()에서 별도의 imageFile 을 생성 및 파일 절대경로 저장을 하기 때문에
-            onActivityResult()에서는 별도의 작업 필요無 */
-
 //            저장한 파일 경로를 이미지 라이브러리인 Glide 사용하여 이미지 뷰에 세팅하기
             if (imagePath.length() > 0) {
                 GlideApp.with(this)
@@ -195,14 +205,13 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
 
     @SuppressLint("SimpleDateFormat")
     File createImageFile() throws IOException {
-//        이미지 파일 생성
-        String timeStamp = imageDate.format(new Date()); // 파일명 중복을 피하기 위한 "yyyyMMdd_HHmmss"꼴의 timeStamp
+        String timeStamp = imageDate.format(new Date()); // "yyyyMMdd_HHmmss" timeStamp
         String fileName = "IMAGE_" + timeStamp; // 이미지 파일 명
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File file = File.createTempFile(fileName,
                 ".jpg",
                 storageDir); // 이미지 파일 생성
-        imagePath = file.getAbsolutePath(); // 파일 절대경로 저장하기
+        imagePath = file.getAbsolutePath(); // 파일 절대경로 저장
         return file;
     }
 
@@ -217,12 +226,15 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
                 String imageFileName = "IMAGE_" + timeStamp + "_.png"; // 파일명
                 reference = storage.getReference().child("image").child(imageFileName); // 이미지 파일 경로 지정 (/item/imageFileName)
                 uploadTask = reference.putFile(imageUri); // 업로드할 파일과 업로드할 위치 설정
+                ImageRealName = imageFileName;
                 break;
             case CAMERA:
                 /*카메라 선택 시 생성했던 이미지파일명으로 reference 에 경로 세팅,
                  * uploadTask 에서 생성한 이미지파일을 업로드하기로 설정*/
                 reference = storage.getReference().child("image").child(imageFile.getName()); // imageFile.toString()을 할 경우 해당 파일의 경로 자체가 불러와짐
                 uploadTask = reference.putFile(Uri.fromFile(imageFile)); // 업로드할 파일과 업로드할 위치 설정
+
+                ImageRealName = imageFile.getName();
                 break;
         }
 
@@ -232,8 +244,9 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 //            업로드 성공 시 동작
 //                hideProgressDialog();
+
                 Log.d(TAG, "onSuccess: upload");
-//                downloadUri(); // 업로드 성공 시 업로드한 파일 Uri 다운받기
+                downloadUri(); // 업로드 성공 시 업로드한 파일 Uri 다운받기
                 Toast.makeText(NewFoodActivity.this," 식단 저장 완료 !! ",Toast.LENGTH_LONG).show();
 
             }
@@ -248,31 +261,14 @@ public class NewFoodActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     void downloadUri() {
-//        지정한 경로(reference)에 대한 uri 을 다운로드하는 method
-//        showProgressDialog("다운로드 중");
         reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-//                uri 다운로드 성공 시 동작
-//                다운받은 uri를 인텐트에 넣어 다른 액티비티로 이동
-//                hideProgressDialog();
-
-                Log.d(TAG, "onSuccess: download");
-
-
-//                intent = new Intent(NewFoodActivity.this, SetImageActivity.class);
-                intent.putExtra("path", uri.toString()); // 다운로드한 uri, String 형으로 바꿔 인텐트에 넣기
-                startActivity(intent);
-
-
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-//                uri 다운로드 실패 시 동작
-//                hideProgressDialog();
-                Log.d(TAG, "onFailure: download");
             }
         });
     }
