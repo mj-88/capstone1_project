@@ -6,6 +6,56 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/button_today"
+        android:layout_width="232dp"
+        android:layout_height="98dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="376dp"
+        android:layout_marginBottom="28dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_shape"
+        android:text="오늘 식단"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button_past"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_past"
+        android:layout_width="232dp"
+        android:layout_height="98dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="28dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_shape"
+        android:text="지난 식단"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/buttonNew"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_today" />
+
+    <Button
+        android:id="@+id/buttonNew"
+        android:layout_width="232dp"
+        android:layout_height="98dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="340dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_shape"
+        android:text="식단 등록"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_past" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -25,9 +75,9 @@
             android:layout_width="160dp"
             android:layout_height="100dp"
             android:layout_weight="1"
-            android:background="@drawable/button_shape"
+            android:background="@drawable/button_shape_click"
             android:text="식단관리"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <Button
@@ -36,7 +86,7 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             android:text="오픈채팅"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:textStyle="bold"
             android:background="@drawable/button_shape"
             android:layout_marginHorizontal="20dp"/>
@@ -48,7 +98,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_shape"
             android:text="프로필"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
 

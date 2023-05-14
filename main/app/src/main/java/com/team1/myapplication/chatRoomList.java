@@ -48,21 +48,39 @@ public class chatRoomList extends AppCompatActivity {
 
     private SearchView mSearchView;
 
-//    Map<String, Object> map = new HashMap<String, Object>();
     private String uid;
-    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room_list);
 
-        setTitle("채팅방 목록");
+//        setTitle("채팅방 목록");
+
+        //하단 메뉴
+        Button button1 = (Button) findViewById(R.id.button1);
+        Button button3 = (Button) findViewById(R.id.button3);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view){
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view){
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //회원정보에서 닉네임 가져오기
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference Username=database.getReference("UserAccount").child(uid).child("user_nickname");
+//        DatabaseReference Username=database.getReference("UserAccount").child(uid).child("user_nickname");
+        DatabaseReference Username=database.getReference().child("UserAccount").child(uid).child("user_nickname");
 
         Username.addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,7 +158,7 @@ public class chatRoomList extends AppCompatActivity {
 
         mSearchView = findViewById(R.id.searchView);
 
-        //필터
+        //채팅방 이름 검색
         mSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,14 +212,18 @@ public class chatRoomList extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
+
                 Intent intent =new Intent(getApplicationContext(), ChatActivity.class);
                 intent.putExtra("room_name", ((TextView)view).getText().toString());
                 intent.putExtra("user_name", str_name);
-                startActivity(intent);
 
-                Toast toast = Toast.makeText(getApplicationContext(), str_name+"채팅방에 입장했습니다.", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), ((TextView)view).getText().toString()+"에 입장했습니다.", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.TOP, 0, 0);
                 toast.show();
+
+                startActivity(intent);
+
+
             }
         });
     }

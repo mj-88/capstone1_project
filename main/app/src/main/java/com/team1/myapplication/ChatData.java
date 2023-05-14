@@ -5,8 +5,9 @@ package com.team1.myapplication;
      public String msg;
      public String nickname;
 
+//     public String room;
+
      public Object timestamp;
-//     public String SendTime;
 
      public String getMsg(){
         return msg;
@@ -23,7 +24,12 @@ package com.team1.myapplication;
          this.nickname=nickname;
      }
 
-//    public Object getSendTime() {return timestamp;}
+//     public String getRoom(){
+//         return room;
+//     }
+//     public void setRoom(String room){
+//         this.room=room;
+//     }
     public void setSendTime(Object timestamp){this.timestamp=timestamp;}
 
 }

@@ -16,12 +16,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class SecessionActivity extends AppCompatActivity {
 
 
     private FirebaseUser user;
+
     private TextView email_View;
 
     @Override
@@ -33,8 +35,8 @@ public class SecessionActivity extends AppCompatActivity {
 
         String email = user.getEmail();
         email_View = (TextView)findViewById(R.id.textView5);
-
         email_View.setText(email);
+
 
 
 

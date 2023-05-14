@@ -2,6 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +26,34 @@
         android:theme="@style/Theme.MyApplication"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.team1.myapplication.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:usesCleartextTraffic="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/external" />
+        </provider>
+
+        <activity
+            android:name=".chatRoomList"
+            android:exported="false" />
+
+        <activity
+            android:name=".NewFoodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TodayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserServiceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".SecessionActivity"
             android:exported="false" />
@@ -39,9 +81,7 @@
         <activity
             android:name=".ChatActivity"
             android:exported="false" />
-        <activity
-            android:name=".chatRoomList"
-            android:exported="false" />
+
 
     </application>
 
