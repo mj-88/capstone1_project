@@ -35,6 +35,7 @@ import java.util.Date;
 import android.Manifest;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -156,7 +157,7 @@ String ImageRealName = "";
                     if(ImageRealName != null  ) {
 
                         uploadImg();
-
+//안녕
                         Date nowDate = new Date();
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
                         String strSaveDate = simpleDateFormat.format(nowDate);
@@ -195,7 +196,7 @@ String ImageRealName = "";
             }
 //            저장한 파일 경로를 이미지 라이브러리인 Glide 사용하여 이미지 뷰에 세팅하기
             if (imagePath.length() > 0) {
-                GlideApp.with(this)
+                Glide.with(this)
                         .load(imagePath)
                         .into(imageView);
                 imgFrom = requestCode; // 사진을 가져온 곳이 카메라일 경우 CAMERA(100), 갤러리일 경우 GALLERY(101)
