@@ -33,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
         Button button_past =(Button)findViewById(R.id.button_past);
         Button button_new = (Button)findViewById(R.id.buttonNew);
 
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view){
+                Intent intent = new Intent(getApplicationContext(), chatRoomList.class);
+                startActivity(intent);
+            }
+        });
 
         button3.setOnClickListener(new View.OnClickListener() {
             @Override

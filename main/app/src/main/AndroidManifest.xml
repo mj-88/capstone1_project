@@ -37,7 +37,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/external" />
         </provider>
-
+        <activity
+            android:name=".chatRoomList"
+            android:exported="false" />
         <activity
             android:name=".NewFoodActivity"
             android:exported="false" />
@@ -73,6 +75,9 @@
             android:exported="false" />
         <activity
             android:name=".FindPwdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatActivity"
             android:exported="false" />
     </application>
 
