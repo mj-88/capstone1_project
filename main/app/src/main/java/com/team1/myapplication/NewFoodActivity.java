@@ -166,7 +166,7 @@ String ImageRealName = "";
                         FirebaseUser get_Auth_value = FirebaseAuth.getInstance().getCurrentUser();
                         String stremailId = get_Auth_value.getEmail();
 
-                        mDatabase = ref.child("food");
+                        mDatabase = ref.child("food").child(get_Auth_value.getUid());
 
 
 
@@ -215,11 +215,6 @@ String ImageRealName = "";
             if (requestCode == GALLERY) { // 갤러리 선택한 경우
                 imageUri = data.getData(); // 이미지 Uri 정보
                 imagePath = data.getDataString(); // 이미지 위치 경로 정보
-
-                Log.d("uri  값  :   ", imageUri.toString());
-                Log.d("path  값  :   ", imagePath.toString());
-
-                Log.d("file 값  :   ", imageFile.toString());
 
 
             }

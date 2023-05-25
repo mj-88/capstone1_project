@@ -49,13 +49,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
 
 
-        StorageReference ImageReference = FirebaseStorage.getInstance().getReference("image").child(arrayList.get(position).getImageName());
+        StorageReference ImageReference = FirebaseStorage.getInstance().getReference("image").child(arrayList.get(position).getImageName().toString());
         ImageReference.getDownloadUrl().addOnSuccessListener(
-                uri -> Glide.with(context)
+                uri -> Glide.with(holder.itemView)
                             .load(uri)
+                            .error(R.drawable.camera_button)
                             .dontAnimate()
                             .override(200,200)
-                             .fitCenter()
+                            .fitCenter()
                             .into(holder.iv_food)
         );
 //        youtube

@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,13 +61,9 @@ public class LastMealActivity extends AppCompatActivity {
         arrayList = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
 
+        FirebaseUser get_Auth_value = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = database.getReference("food").child(get_Auth_value.getUid());
 
-        databaseReference = database.getReference("food");
-
-        /*
-        * FOOD ( ImageName(파일명), 제목명, 일자 ,mealName식사명)
-        *
-        * */
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -74,24 +72,6 @@ public class LastMealActivity extends AppCompatActivity {
                 arrayList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Food food = snapshot.getValue(Food.class);
-
-                    /*storage에서 food.getImageName()->조회를 해  */
-//                    StorageReference reference = storageRef.child(food.getImageName());
-//
-//                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//
-//                        @Override
-//                        public void onSuccess(Uri uri) {
-//                            if(uri != null) {
-//                                food.setImageUri(uri);
-//                                imageUri = uri;
-//                            }else{
-//                                Toast.makeText(LastMealActivity.this,"에러발생",Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//
-//                    food.setImageUri(imageUri);
                     arrayList.add(food);
                 }
                 adapter.notifyDataSetChanged();
@@ -107,9 +87,6 @@ public class LastMealActivity extends AppCompatActivity {
 
         adapter = new CustomAdapter(arrayList,this);
 
-//        adapter = new CustomAdapter(arrayList, getContext());
-
-//       adapter = new CustomAdapter(arrayList,recyclerView.getContext());
 
         recyclerView.setAdapter(adapter);
 
