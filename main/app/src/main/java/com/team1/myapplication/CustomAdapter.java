@@ -1,8 +1,6 @@
 package com.team1.myapplication;
 
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -26,8 +22,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     private ArrayList<Food> arrayList;
     private Context context;
 
-    public CustomAdapter(ArrayList<Food> arrayList, Context context) {
-        this.arrayList = arrayList;
+
+//    StorageReference pathReference = storageReference.child(arrayList.get(position).getImageName());
+
+    public CustomAdapter(ArrayList<Food> arrayList2, Context context) {
+        this.arrayList = arrayList2;
         this.context = context;
 
         //com.team1.myapplication.LastMealActivity@6c47ce5
@@ -49,35 +48,28 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
 
-        StorageReference pathReference = storageReference.child(arrayList.get(position).getImageName());
-
+        StorageReference ImageReference = FirebaseStorage.getInstance().getReference("image").child(arrayList.get(position).getImageName());
+        ImageReference.getDownloadUrl().addOnSuccessListener(
+                uri -> Glide.with(context)
+                            .load(uri)
+                            .dontAnimate()
+                            .override(200,200)
+                             .fitCenter()
+                            .into(holder.iv_food)
+        );
+//        youtube
 //        Glide.with(holder.itemView)
-//                .load(arrayList.get(position).getImageName())
-//                .into(holder.iv_profile);
+//                .load(arrayList.get(position).getImageUri())
+//                .error(R.drawable.camera_button)
+//                .dontAnimate()
+//                .override(200,200)
+//                .fitCenter()
+//                .into(holder.iv_food);
 
 
         holder.tv_mealName.setText(arrayList.get(position).getMealName());
         holder.tv_saveDate.setText(arrayList.get(position).getSaveDate());
-
-
-
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Glide.with(holder.itemView).load(uri).into(holder.iv_profile);
-                Log.d("제발    ! ㅅ", uri.toString());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-
-
 
 
     }
@@ -89,16 +81,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomView
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView iv_profile;
+        ImageView iv_food;
         TextView tv_mealName;
         TextView tv_saveDate;
-
 
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            this.iv_profile = itemView.findViewById(R.id.iv_profile);
+            this.iv_food = itemView.findViewById(R.id.iv_food);
 
             this.tv_mealName = itemView.findViewById(R.id.tv_mealName);
 

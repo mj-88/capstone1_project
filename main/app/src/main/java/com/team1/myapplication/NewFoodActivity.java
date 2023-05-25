@@ -169,13 +169,35 @@ String ImageRealName = "";
                         mDatabase = ref.child("food");
 
 
+
+
+//                        FirebaseStorage storage1 = FirebaseStorage.getInstance("gs://my-application-mju.appspot.com/image");
+//                        StorageReference storageRef1 = storage1.getReference();
+//
+//                        storageRef1.child(ImageRealName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                            @Override
+//                            public void onSuccess(Uri uri) {
+//                                // Got the download URL for 'users/me/profile.png'
+//
+//                                Log.d("tlqkf     ", uri.toString());
+//                            }
+//                        }).addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception exception) {
+//                                // Handle any errors
+//                            }
+//                        });
+
+
+
+
                         MealUpload mealUpload = new MealUpload(strSaveDate , stremailId, ImageRealName, strMealName);
                         mDatabase.push().setValue(mealUpload);
                         Toast.makeText(NewFoodActivity.this, "loading...", Toast.LENGTH_LONG).show();
                         finish();
 
                     }else {
-                                    Toast.makeText(NewFoodActivity.this, "식단명을 입력하세요.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewFoodActivity.this, "식단명을 입력하세요.", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -193,6 +215,13 @@ String ImageRealName = "";
             if (requestCode == GALLERY) { // 갤러리 선택한 경우
                 imageUri = data.getData(); // 이미지 Uri 정보
                 imagePath = data.getDataString(); // 이미지 위치 경로 정보
+
+                Log.d("uri  값  :   ", imageUri.toString());
+                Log.d("path  값  :   ", imagePath.toString());
+
+                Log.d("file 값  :   ", imageFile.toString());
+
+
             }
 //            저장한 파일 경로를 이미지 라이브러리인 Glide 사용하여 이미지 뷰에 세팅하기
             if (imagePath.length() > 0) {

@@ -1,5 +1,9 @@
 package com.team1.myapplication;
 
+import android.net.Uri;
+
+import com.google.firebase.storage.StorageReference;
+
 public class Food {
 
     private String emailId;
@@ -7,7 +11,19 @@ public class Food {
     private String mealName;
     private String saveDate;
 
+    private Uri imageUri;
+
+
+
     public Food(){}
+
+    public Uri getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
+    }
 
     public String getEmailId() {
         return emailId;
@@ -42,10 +58,11 @@ public class Food {
 
     }
 
-    public Food(String emailId, String imageName, String mealName, String saveDate) {
+    public Food(String emailId, String imageName, String mealName, String saveDate, Uri imageUri) {
         this.emailId = emailId;
         this.imageName = imageName;
         this.mealName = mealName;
         this.saveDate = saveDate;
+        this.imageUri = imageUri;
     }
 }
