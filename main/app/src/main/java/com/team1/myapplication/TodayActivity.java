@@ -1,61 +1,59 @@
 package com.team1.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
+import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
+
+import java.util.List;
 
 public class TodayActivity extends AppCompatActivity {
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    TabLayout tabs;
+    private Button Button_send;
+    private DatabaseReference myRef;
 
-   today_1 fragment1;
-   today_2 fragment2;
-   today_3 fragment3;
+    private List<ChatData> foodList;
+    private String str_user_name;
+    private String str_room_name;
+    private EditText EditText_chat;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today);
 
+        FirebaseCustomRemoteModel foodModel =
+                new FirebaseCustomRemoteModel.Builder("foodmodel").build();
 
-        fragment1 = new today_1();
-        fragment2 = new today_2();
-        fragment3 = new today_3();
+        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
+                .requireWifi()
+                .build();
+        FirebaseModelManager.getInstance().download(foodModel, conditions)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Success.
+                    }
+                });
 
-        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment1).commit();
 
-        tabs = findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText("오늘 식단"));
-        tabs.addTab(tabs.newTab().setText("식단 분석"));
-        tabs.addTab(tabs.newTab().setText("식단 추천"));
 
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                Fragment selected = null;
-                if(position == 0)
-                    selected = fragment1;
-                else if(position == 1)
-                    selected = fragment2;
-                else if(position == 2)
-                    selected = fragment3;
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, selected).commit();
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
 }

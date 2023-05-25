@@ -67,6 +67,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+        button_past.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view){
+                Intent intent = new Intent(getApplicationContext(), LastMealActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+
+
+
+
+
     }
 
 
